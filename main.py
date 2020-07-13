@@ -36,9 +36,14 @@ class Board(tk.Canvas):
 
     # Game loop
     def move_player(self):
-        global player_bbox
+        dx, dy = self.get_movement()
 
-        player_bbox = self.coords(self.player)
+        self.move(self.player, dx, dy)
+
+        self.after(100, self.move_player)
+
+    def get_movement(self):
+        temp_bbox = self.coords(self.player)
         dx, dy = 0, 0
 
         dy = {'up': -20,
@@ -46,11 +51,21 @@ class Board(tk.Canvas):
         dx = {'right': 20,
               'left': -20}.get(direction, 0)
 
-        # if player_bbox ==
+        # Apply theoretical changes
+        temp_bbox[0] += dx
+        temp_bbox[2] += dx
+        temp_bbox[1] += dy
+        temp_bbox[3] += dy
 
-        self.move(self.player, dx, dy)
+        x_bbox = temp_bbox[::2]
+        y_bbox = temp_bbox[1::2]
 
-        self.after(100, self.move_player)
+        if min(x_bbox) < 0 or max(x_bbox) > 500:
+            dx = 0
+        if min(y_bbox) < 0 or max(y_bbox) > 500:
+            dy = 0
+
+        return dx, dy
 
 
 class Snake(tk.Frame):
