@@ -27,6 +27,7 @@ class Board(tk.Canvas):
         apple_img = ImageTk.PhotoImage(Image.open('res/apple.png'))
         self.image = apple_img
         self.apple = self.create_image(apple_coords, tags='apple', image=apple_img)
+        self.score = self.create_text(480, 5, anchor='ne', text='Score: 0', fill='white')
 
     def key_press(self, event):
         global direction
@@ -39,6 +40,9 @@ class Board(tk.Canvas):
             direction = 'down'
         elif button_press == 'd':
             direction = 'right'
+        elif button_press == 'x':
+            print('Height:', self.winfo_height())
+            print('Width:', self.winfo_width())
 
     # Game loop
     def move_player(self):
@@ -81,6 +85,7 @@ class Snake(tk.Frame):
 
 
 root = tk.Tk()
-root.geometry('500x500')
+root.title('Snake')
+root.geometry('504x504')
 game = Snake(root)
 root.mainloop()
