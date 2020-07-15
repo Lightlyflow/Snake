@@ -1,8 +1,11 @@
 import tkinter as tk
+from PIL import ImageTk, Image
 
 direction = 'up'
 player_bbox = (240, 240, 260, 260)
-
+UPDATE_TIME = 100
+apple_coords = (0, 0)
+apple_img = None
 
 class Board(tk.Canvas):
     global direction
@@ -13,14 +16,17 @@ class Board(tk.Canvas):
         self.pack(fill=tk.BOTH, expand=1, padx=2, pady=2)
 
     def initGame(self):
-        self.create_player()
+        self.create_entities()
 
         self.bind_all("<Key>", self.key_press)
         self.after(500, self.move_player)
         pass
 
-    def create_player(self):
+    def create_entities(self):
         self.player = self.create_rectangle(player_bbox, tags='player', fill='white', outline='white')
+        apple_img = ImageTk.PhotoImage(Image.open('res/apple.png'))
+        self.image = apple_img
+        self.apple = self.create_image(apple_coords, tags='apple', image=apple_img)
 
     def key_press(self, event):
         global direction
@@ -40,11 +46,10 @@ class Board(tk.Canvas):
 
         self.move(self.player, dx, dy)
 
-        self.after(100, self.move_player)
+        self.after(UPDATE_TIME, self.move_player)
 
     def get_movement(self):
         temp_bbox = self.coords(self.player)
-        dx, dy = 0, 0
 
         dy = {'up': -20,
               'down': 20}.get(direction, 0)
